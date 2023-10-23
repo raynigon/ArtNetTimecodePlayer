@@ -1,6 +1,7 @@
 import json
 import os
 import socket
+import sys
 
 import tkinter as tk
 import tkinter.ttk as ttk
@@ -216,7 +217,7 @@ class ArtNetPlayer(tk.Frame):
         lbl.grid(row=4, column=0, padx=10, pady=5)
         lbl.bind("<Button-1>", self.callback)
 
-    def open_config_window(self, sizex=360, sizey=220, offsetx=452):
+    def open_config_window(self, sizex=460, sizey=320, offsetx=452):
         self.conf_wind = Toplevel(self.master_frame)      ###
         self.conf_wind.title("Configure params")
         # sets the geometry of toplevel
@@ -280,8 +281,11 @@ class ArtNetPlayer(tk.Frame):
     def check_udp_send(self):
         eth_index = self.eth_combobox.current()
         # Close socket
-        self.opened_socket.shutdown(socket.SHUT_RDWR)
-        self.opened_socket.close()
+        try:
+            self.opened_socket.shutdown(socket.SHUT_RDWR)
+            self.opened_socket.close()
+        except:
+            pass
         # Init socket
         self.opened_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.opened_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, eth_index)
